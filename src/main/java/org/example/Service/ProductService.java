@@ -31,14 +31,6 @@ public class ProductService {
         return productsList;
     }
 
-    public List<String> getAllProductNames() {
-        List<String> allProductNames = new ArrayList<>();
-        for (Product product : products) {
-            allProductNames.add(product.getProductName());
-        }
-        return allProductNames;
-    }
-
     public String viewAProducts() throws SQLException {
         return dao.viewAllProducts();
     }

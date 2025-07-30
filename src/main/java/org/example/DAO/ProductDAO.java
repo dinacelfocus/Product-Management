@@ -21,7 +21,7 @@ public class ProductDAO {
     }
 
     public void insertProduct(Product product) throws SQLException {
-        String alo="alo";
+        String result="alo";
         String query = "INSERT INTO products (id, productName, price) VALUES (?, ?, ?)";
         try (Connection myConn = connect();
              PreparedStatement myStmt = myConn.prepareStatement(query)) {
@@ -29,6 +29,8 @@ public class ProductDAO {
             myStmt.setString(2, product.getProductName());
             myStmt.setString(3, product.getProductPrice());
             myStmt.executeUpdate();
+            myStmt.executeQuery();
+
         }catch (SQLException exc) {
             exc.printStackTrace();
         }

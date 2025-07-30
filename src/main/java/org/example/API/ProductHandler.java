@@ -46,7 +46,7 @@ public class ProductHandler implements HttpHandler {
             logger.info("Read product from server is: "+newProduct.getProductName());
             productService.addProduct(newProduct);
             logger.info("Added product from server is: "+newProduct);
-            response = "Product added: " + newProduct.getProductName();
+            response = "Product " + newProduct.getProductName()+" added successfully!";
             logger.info("Product added: " + response);
         } else {
             response = "Error adding product :(";
