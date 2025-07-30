@@ -1,22 +1,19 @@
 package org.example.Model;
 
-import javax.annotation.processing.Generated;
-import java.util.UUID;
-
 public class Product {
-    private UUID productId;
+    private int productId;
     private String productName;
     private String productPrice;
 
-    public Product(String productName, String productPrice) {
-        this.productId = UUID.randomUUID();
+    public Product(int productId,String productName, String productPrice) {
+        this.productId = productId;
         this.productName = productName;
         this.productPrice = productPrice;
     }
-    public UUID getProductId() {
+    public int getProductId() {
         return productId;
     }
-    public void setProductId(UUID productId) {
+    public void setProductId(int productId) {
         this.productId = productId;
     }
     public String getProductName() {

@@ -1,0 +1,9 @@
+CREATE DATABASE productDB;
+
+USE productDB;
+
+CREATE TABLE products (
+    id int NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) DEFAULT NULL,
+    price VARCHAR(60) DEFAULT NULL
+);

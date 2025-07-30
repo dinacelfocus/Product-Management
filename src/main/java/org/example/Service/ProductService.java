@@ -1,48 +1,77 @@
 package org.example.Service;
 
-import com.sun.net.httpserver.HttpExchange;
-import com.sun.net.httpserver.HttpHandler;
+import org.example.DAO.ProductDAO;
 import org.example.Model.Product;
 
-import java.io.IOException;
-import java.io.OutputStream;
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
-public class ProductService implements HttpHandler {
+public class ProductService {
     List<Product> products= new ArrayList<>();
+    ProductDAO dao = new ProductDAO();
 
-    @Override
-    public void handle(HttpExchange exchange) throws IOException {
-        String response= "";
-        int statusCode = 200;
-
-        if ("GET".equals(exchange.getRequestMethod())) {
-            List<String> allP=getAllProducts();
-            for(String product : allP){
-                response=" "+product+"\n";
-            }
-        } else if ("POST".equals(exchange.getRequestMethod())) {
-            Product newProduct = new Product( "Shoes", "EGP1500");
-            products.add(newProduct);
-            response = "Product added successfully!";
-        } else {
-            response = "Error adding product :(";
-            statusCode = 404;
-        }
-
-        exchange.sendResponseHeaders(statusCode, response.getBytes().length);
-        OutputStream os = exchange.getResponseBody();
-        os.write(response.getBytes());
-        os.close();
+    public void addProduct(Product p){
+//        try{
+//            products.add(p);
+//            dao.insertProduct(p);
+//        }catch(SQLException e){
+//            //throw new DatabaseException("Failed to insert product", e);
+//        }
+        products.add(p);
     }
 
-    public List<String> getAllProducts() {
-        List<String> allProducts = new ArrayList<>();
-        for (Product product : products) {
-            allProducts.add(product.getProductName());
+    public List<Product> getProductsList(){
+        List<Product> productsList= new ArrayList<>();
+        for(Product product:products){
+            productsList.add(product);
         }
-        return allProducts;
+        return productsList;
+    }
+
+    public List<String> getAllProductNames() {
+        List<String> allProductNames = new ArrayList<>();
+        for (Product product : products) {
+            allProductNames.add(product.getProductName());
+        }
+        return allProductNames;
+    }
+
+    public void viewAProducts() {
+        dao.viewAllProducts();
+    }
+
+    public Product getProductById(int id) {
+        for (Product product : products) {
+            if (product.getProductId()==(id)) {
+                return product;
+            }
+        }
+        return null;
+    }
+
+    public int getProductId(String name) {
+        for (Product product : products) {
+            if (product.getProductName().equals(name)) {
+                return product.getProductId();
+            }
+        }
+        return 0;
+    }
+
+    public List<Product> filterByName(String name) {
+        return products.stream()
+                .filter(p -> p.getProductName().equalsIgnoreCase(name))
+                .collect(Collectors.toList());
+    }
+
+    public List<Product> sortByPrice() {
+        return products.stream()
+                .sorted(Comparator.comparing(Product::getProductPrice))
+                .collect(Collectors.toList());
     }
 
 }
