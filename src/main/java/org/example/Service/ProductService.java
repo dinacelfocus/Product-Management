@@ -15,13 +15,12 @@ public class ProductService {
     ProductDAO dao = new ProductDAO();
 
     public void addProduct(Product p){
-//        try{
-//            products.add(p);
-//            dao.insertProduct(p);
-//        }catch(SQLException e){
-//            //throw new DatabaseException("Failed to insert product", e);
-//        }
-        products.add(p);
+        try{
+            products.add(p);
+            dao.insertProduct(p);
+        }catch(SQLException e){
+            //throw new DatabaseException("Failed to insert product", e);
+        }
     }
 
     public List<Product> getProductsList(){
@@ -40,8 +39,8 @@ public class ProductService {
         return allProductNames;
     }
 
-    public void viewAProducts() {
-        dao.viewAllProducts();
+    public String viewAProducts() throws SQLException {
+        return dao.viewAllProducts();
     }
 
     public Product getProductById(int id) {

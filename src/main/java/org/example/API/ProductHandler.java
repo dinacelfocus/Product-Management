@@ -9,6 +9,7 @@ import org.example.Service.ProductService;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.UUID;
 import java.util.logging.Logger;
@@ -29,19 +30,23 @@ public class ProductHandler implements HttpHandler {
         int statusCode = 200;
 
         if ("GET".equals(exchange.getRequestMethod())) {
-            List<String> allP=productService.getAllProductNames();
-            for(String productName : allP){
-                response = response+ " " +productName + "\n";
+            try {
+                response = productService.viewAProducts();
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
             }
+//            List<String> allP=productService.getAllProductNames();
+//            for(String productName : allP){
+//                response = response+ " " +productName + "\n";
+//            }
             logger.info("Response from server is: "+response);
 
         } else if ("POST".equals(exchange.getRequestMethod())) {
-              response=  "aloo";
-//            Product newProduct = gson.fromJson(new InputStreamReader(exchange.getRequestBody()), Product.class);
-//            logger.info("Read product from server is: "+newProduct.getProductName());
-//            productService.addProduct(newProduct);
-//            logger.info("Added product from server is: "+newProduct);
-//            response = "Product added: " + newProduct.getProductName();
+            Product newProduct = gson.fromJson(new InputStreamReader(exchange.getRequestBody()), Product.class);
+            logger.info("Read product from server is: "+newProduct.getProductName());
+            productService.addProduct(newProduct);
+            logger.info("Added product from server is: "+newProduct);
+            response = "Product added: " + newProduct.getProductName();
             logger.info("Product added: " + response);
         } else {
             response = "Error adding product :(";
