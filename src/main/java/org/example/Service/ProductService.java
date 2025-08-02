@@ -41,7 +41,7 @@ public class ProductService {
                 return product;
             }
         }
-        return null;
+        return products.get(0);
     }
 
     public int getProductId(String name) {
