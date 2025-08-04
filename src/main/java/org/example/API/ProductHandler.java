@@ -43,6 +43,30 @@ public class ProductHandler implements HttpHandler {
                     response = "Product not found with id: " + id;
                 }
                 logger.info("Response from server is: "+response);
+            } else if (path.matches("/products/sorted")) {
+                List<Product> products = productService.sortByPrice();
+                if (products != null) {
+                    for (Product p : products) {
+                        response += p.getProductName() + " : " + p.getProductPrice() + "\n";
+                    }
+                } else {
+                    statusCode = 404;
+                    response = "Unable to sort products.";
+                }
+                logger.info("Response from server is: " + response);
+            } else if (path.matches("/products/[^/]+")) {
+                String name = path.substring(path.lastIndexOf("/") + 1);
+                List<Product> products = productService.filterByName(name);
+                if (products != null) {
+                    for (Product p : products) {
+                        response += p.getProductId()+"\n";
+
+                    }
+                } else {
+                    statusCode = 404;
+                    response = "No products available with the name: " + name;
+                }
+                logger.info("Response from server is: "+response);
             } else if ("/products".equals(path)) {
                 try {
                     response = productService.viewAProducts();

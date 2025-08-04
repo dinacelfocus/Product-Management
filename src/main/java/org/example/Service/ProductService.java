@@ -10,47 +10,48 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import static java.lang.Integer.parseInt;
+
 public class ProductService {
-    List<Product> products= new ArrayList<>();
     ProductDAO dao = new ProductDAO();
+    List<Product> products= dao.getAllProducts();
 
     public void addProduct(Product p){
         try{
-            products.add(p);
+//            products.add(p);
             dao.insertProduct(p);
         }catch(SQLException e){
             //throw new DatabaseException("Failed to insert product", e);
+            //exception id already exists
         }
     }
 
-    public List<Product> getProductsList(){
-        List<Product> productsList= new ArrayList<>();
-        for(Product product:products){
-            productsList.add(product);
-        }
-        return productsList;
-    }
+//    public List<Product> getProductsList(){
+//        return dao.getAllProducts();
+//    }
 
     public String viewAProducts() throws SQLException {
         return dao.viewAllProducts();
     }
 
     public Product getProductById(int id) {
+        Product p = null;
         for (Product product : products) {
             if (product.getProductId()==(id)) {
-                return product;
+                p=product;
             }
         }
-        return products.get(0);
+        return p;
     }
 
-    public int getProductId(String name) {
+    public Product getProductId(String name) {
+        Product p = null;
         for (Product product : products) {
             if (product.getProductName().equals(name)) {
-                return product.getProductId();
+                p=product;
             }
         }
-        return 0;
+        return p;
     }
 
     public List<Product> filterByName(String name) {
@@ -59,9 +60,22 @@ public class ProductService {
                 .collect(Collectors.toList());
     }
 
+
+    private int extractPrice(String priceString) {
+        if (priceString == null) return 0;
+
+        String number = priceString.replaceAll("[^\\d.]", "");
+
+        try {
+            return  Integer.parseInt(number);
+        } catch (NumberFormatException e) {
+            return 0;
+        }
+    }
+
     public List<Product> sortByPrice() {
         return products.stream()
-                .sorted(Comparator.comparing(Product::getProductPrice))
+                .sorted(Comparator.comparing(p -> extractPrice(p.getProductPrice())))
                 .collect(Collectors.toList());
     }
 

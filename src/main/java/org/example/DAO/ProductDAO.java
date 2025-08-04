@@ -3,6 +3,8 @@ package org.example.DAO;
 import org.example.Model.Product;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 import static java.sql.DriverManager.getConnection;
 
@@ -21,7 +23,6 @@ public class ProductDAO {
     }
 
     public void insertProduct(Product product) throws SQLException {
-        String result="alo";
         String query = "INSERT INTO products (id, productName, price) VALUES (?, ?, ?)";
         try (Connection myConn = connect();
              PreparedStatement myStmt = myConn.prepareStatement(query)) {
@@ -59,6 +60,28 @@ public class ProductDAO {
             System.out.println("Error viewing products: " + e.getMessage());
         }
         return result;
+    }
+    public List<Product> getAllProducts() {
+        List<Product> products = new ArrayList<>();
+        String query = "SELECT * FROM products";
+        try {
+            Connection myConn = connect();
+            PreparedStatement myStmt = myConn.prepareStatement(query);
+            ResultSet rs = myStmt.executeQuery();
+
+            while (rs.next()) {
+                int id = rs.getInt("id");
+                String name = rs.getString("productName");
+                String price = rs.getString("price");
+
+                Product p= new Product(id, name, price);
+                products.add(p);
+
+            }
+        } catch (SQLException e) {
+            System.out.println("Error getting products: " + e.getMessage());
+        }
+        return products;
     }
 //    public static void main(String[] args) throws SQLException {
 //        connect();
