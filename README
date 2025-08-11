@@ -1,0 +1,32 @@
+--- Product Management CRUD API Application ---
+
+-Is a simple Java SE application for managing a Product.
+
+-Features:
+    create new product,
+    view all products,
+    get product by its ID,
+    filter products by name,
+    sort products ascendingly by price.
+
+-Build instructions:
+    JDK 17+,
+    Maven for build,
+    JDBC with MySQL,
+    JUnit for testing.
+
+-Run instructions:
+    run "ProductServer" class to run an HTTP server on port 8080.
+
+-API endpoints:
+    -> "http://localhost:8080"
+    GET "/products" to view all products,
+    GET "/products/{product id}" to get a specific product by its id,
+    GET "/products/sorted" to sort all products ascendingly by price,
+    GET "/products/{product name}" to get all products with this name,
+    POST "/products" to create a new product by entering its name and price into to request body.
+
+-CURL command example:
+    curl -X POST http://localhost:8080/products
+         -H "Content-Type: application/json"
+         -d '{"productName": "Handbag", "productPrice": "EGP2000"}'
