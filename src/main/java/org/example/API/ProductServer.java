@@ -14,7 +14,7 @@ public class ProductServer {
         ProductService productService = new ProductService();
 
         server.createContext("/products", new ProductHandler(productService));
-        server.setExecutor(null); // creates a default executor
+        server.setExecutor(null);
 
         server.start();
         System.out.println("Server started on port 8080");

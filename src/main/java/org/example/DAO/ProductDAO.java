@@ -6,7 +6,6 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import static java.sql.DriverManager.getConnection;
 
 public class ProductDAO {
 
@@ -33,6 +32,7 @@ public class ProductDAO {
             myStmt.executeQuery();
 
         }catch (SQLException exc) {
+            System.out.println("Error adding products: " + exc.getMessage());
             exc.printStackTrace();
         }
 
@@ -61,6 +61,7 @@ public class ProductDAO {
         }
         return result;
     }
+
     public List<Product> getAllProducts() {
         List<Product> products = new ArrayList<>();
         String query = "SELECT * FROM products";
@@ -83,9 +84,5 @@ public class ProductDAO {
         }
         return products;
     }
-//    public static void main(String[] args) throws SQLException {
-//        connect();
-//
-//    }
 
 }

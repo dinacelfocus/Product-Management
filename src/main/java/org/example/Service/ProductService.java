@@ -1,6 +1,9 @@
 package org.example.Service;
 
 import org.example.DAO.ProductDAO;
+import org.example.Exception.DatabaseException;
+import org.example.Exception.InvalidProductException;
+import org.example.Exception.ProductNotFoundException;
 import org.example.Model.Product;
 
 import java.sql.SQLException;
@@ -16,19 +19,18 @@ public class ProductService {
     ProductDAO dao = new ProductDAO();
     List<Product> products= dao.getAllProducts();
 
+    public List<Product> getAllProducts(){
+        return products;
+    }
+
     public void addProduct(Product p){
         try{
-//            products.add(p);
             dao.insertProduct(p);
         }catch(SQLException e){
-            //throw new DatabaseException("Failed to insert product", e);
-            //exception id already exists
+            throw new DatabaseException("Failed to insert product", e);
         }
     }
 
-//    public List<Product> getProductsList(){
-//        return dao.getAllProducts();
-//    }
 
     public String viewAProducts() throws SQLException {
         return dao.viewAllProducts();
@@ -41,27 +43,25 @@ public class ProductService {
                 p=product;
             }
         }
-        return p;
-    }
-
-    public Product getProductId(String name) {
-        Product p = null;
-        for (Product product : products) {
-            if (product.getProductName().equals(name)) {
-                p=product;
-            }
+        if (p==null) {
+            throw new InvalidProductException("Invalid Product with ID: " + id);
         }
         return p;
     }
 
+
     public List<Product> filterByName(String name) {
-        return products.stream()
+        List<Product> filteredProducts = products.stream()
                 .filter(p -> p.getProductName().equalsIgnoreCase(name))
                 .collect(Collectors.toList());
+        if (filteredProducts.isEmpty()) {
+            throw new ProductNotFoundException("Product not found with name: " + name);
+        }
+        return filteredProducts;
     }
 
 
-    private int extractPrice(String priceString) {
+    public int extractPrice(String priceString) {
         if (priceString == null) return 0;
 
         String number = priceString.replaceAll("[^\\d.]", "");
